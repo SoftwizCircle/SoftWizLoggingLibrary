@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33130.400
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SWCLoggingLibrary", "SWCLoggingLibrary\SWCLoggingLibrary.csproj", "{D79CB2A4-A65A-45FE-9A83-83F5FAC8FBD5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SWCLoggingLibraryTest", "SWCLoggingLibraryTest\SWCLoggingLibraryTest.csproj", "{3CCE03FE-7F8F-41ED-8DF4-E2B1DADE8EC9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D79CB2A4-A65A-45FE-9A83-83F5FAC8FBD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D79CB2A4-A65A-45FE-9A83-83F5FAC8FBD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D79CB2A4-A65A-45FE-9A83-83F5FAC8FBD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D79CB2A4-A65A-45FE-9A83-83F5FAC8FBD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CCE03FE-7F8F-41ED-8DF4-E2B1DADE8EC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CCE03FE-7F8F-41ED-8DF4-E2B1DADE8EC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CCE03FE-7F8F-41ED-8DF4-E2B1DADE8EC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CCE03FE-7F8F-41ED-8DF4-E2B1DADE8EC9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C01DE1CB-E604-4384-9709-63DFCA128EB4}
+	EndGlobalSection
+EndGlobal

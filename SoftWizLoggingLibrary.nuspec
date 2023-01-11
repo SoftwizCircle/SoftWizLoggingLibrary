@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+	<owners>Manish Kumar</owners>
+	<dependencies>
+            <dependency id="Lucene.Net" version="4.8.0-beta00016" />
+			<dependency id="Lucene.Net.Analysis.Common" version="4.8.0-beta00016" />
+			<dependency id="Lucene.Net.QueryParser" version="4.8.0-beta00016" />
+    </dependencies>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <icon>log.png</icon>
+    <!-- <projectUrl>http://project_url_here_or_delete_this_line/</projectUrl>-->
+    <description>$description$</description>
+    <releaseNotes>Beta version</releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags>C#, Logging, .Net Core, MVC, .Net Framework</tags>
+  <contentFiles> 
+            <files include="index.html" buildAction="None" copyToOutput="true" />
+  </contentFiles> 
+  </metadata>
+  <files>
+    <file src="log.png" target="" />
+  </files>
+</package>

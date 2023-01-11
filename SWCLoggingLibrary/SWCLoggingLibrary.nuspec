@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>SWCLogging</id>
+    <version>1.0.21</version>
+    <title>$title$</title>
+    <authors>SoftWiz Circle</authors>
+    <owners>Manish Kumar</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <icon>log.png</icon>
+    <projectUrl>https://github.com/kmrmanish86/SWCL</projectUrl>
+    <description>$description$</description>
+    <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
+    <copyright>$copyright$</copyright>
+    <tags>C#, Logging, .Net Core, MVC, Log, Lucene, ElasticSearch, ELMAH</tags>
+    <dependencies>
+      <dependency id="Lucene.Net" version="4.8.0-beta00016" />
+      <dependency id="Lucene.Net.Analysis.Common" version="4.8.0-beta00016" />
+      <dependency id="Lucene.Net.QueryParser" version="4.8.0-beta00016" />
+      <dependency id="Microsoft.Extensions.Logging" version="7.0.0"/>
+      <dependency id="Microsoft.Extensions.Logging.Abstractions" version="7.0.0"/>
+      <dependency id="Microsoft.Extensions.Logging.Configuration" version="7.0.0"/>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="log.png" target="" />
+  </files>
+</package>

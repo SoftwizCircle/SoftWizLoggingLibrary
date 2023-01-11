@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName></SccProjectName>
+    <SccProvider></SccProvider>
+    <SccAuxPath></SccAuxPath>
+    <SccLocalPath></SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <PackageIcon>log.png</PackageIcon>
+    <PackageIconUrl />
+    <Description>SWC Logging is a logging library which helps us not only in logging but also provides us an in built user interface to search and analyze the log. This is very easy to integrate.</Description>
+    <PackageId>SWCLogging</PackageId>
+    <Product>SWCLogging</Product>
+    <Company>SoftWiz Circle</Company>
+    <Authors>kmrmanish86</Authors>
+    <Owners>Manish Kumar</Owners>
+    <Copyright>Copyright ©  2023</Copyright>
+    <NeutralLanguage></NeutralLanguage>
+    <AssemblyVersion>1.0.9.0</AssemblyVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>1.0.3</Version>
+    <PackageTags>C#, Logging, .Net Core, MVC, Log, Lucene, ElasticSearch, ELMAH</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00016" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SWC.html">
+      <Pack>True</Pack>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="log.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="log.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

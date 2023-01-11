@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SWC Logging</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" />
+    <style>
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
+        body {
+            /* Margin bottom by footer height */
+            margin-bottom: 60px;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            /* Set the fixed height of the footer here */
+            height: 60px;
+            background-color: #f5f5f5;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --color-bg: #EEEDEB;
+            --color-title: #0E1C4E;
+            --color-summary-1: #FFF6EE;
+            --color-summary-1-highlight: #FFC48B;
+            --color-summary-2: #FAFAFF;
+            --color-summary-2-highlight: #B4B3FF;
+            --color-summary-3: #FFF0F3;
+            --color-summary-3-highlight: #FFB3C0;
+            --font-ibm-plex-sans: "IBM Plex Sans", sans-serif;
+        }
+
+        .card {
+            background: white;
+            /*padding: 38px 36px;*/
+            margin-top: 40px;
+            margin-bottom: 40px;
+            border-radius: 4px;
+            box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
+            /*max-width: 30em;*/
+            width: 100%;
+        }
+
+            .card h1 {
+                font-family: var(--font-ibm-plex-sans);
+                font-style: normal;
+                font-weight: bold;
+                font-size: 20px;
+                line-height: 1.2;
+                color: var(--color-title);
+                margin-bottom: 20px;
+            }
+
+            .card details {
+                display: flex;
+                border-radius: 5px;
+                overflow: hidden;
+                background: rgba(0, 0, 0, 0.05);
+                border-left: 15px solid gray;
+                padding: 1px;
+            }
+
+            .card details {
+                margin-top: 3px;
+            }
+
+                .card details.warning {
+                    --highlight: var(--color-summary-1-highlight);
+                    background: var(--color-summary-1);
+                    border-left-color: var(--color-summary-1-highlight);
+                }
+
+                    .card details.warning p {
+                        list-style-type: corona-warning;
+                    }
+
+                .card details.info {
+                    --highlight: var(--color-summary-2-highlight);
+                    background: var(--color-summary-2);
+                    border-left-color: var(--color-summary-2-highlight);
+                }
+
+                    .card details.info p {
+                        list-style-type: corona-info;
+                    }
+
+                .card details.alert {
+                    --highlight: var(--color-summary-3-highlight);
+                    background: var(--color-summary-3);
+                    border-left-color: var(--highlight);
+                }
+
+                    .card details.alert p {
+                        list-style-type: corona-alert;
+                    }
+
+                .card details summary, .card details p {
+                    position: relative;
+                    display: flex;
+                    flex-direction: row;
+                    align-content: center;
+                    justify-content: flex-start;
+                    font-family: var(--font-ibm-plex-sans);
+                    font-style: normal;
+                    font-weight: normal;
+                    /*font-size: 18px;*/
+                    color: var(--color-title);
+                    padding: 10px;
+                    cursor: pointer;
+                }
+
+                    .card details summary::-webkit-details-marker, .card details p::-webkit-details-marker {
+                        display: none;
+                    }
+
+                    .card details summary:focus, .card details p:focus {
+                        outline: solid 3px var(--highlight);
+                    }
+
+                    .card details summary::-moz-selection, .card details p::-moz-selection {
+                        background-color: var(--highlight);
+                    }
+
+                    .card details summary::selection, .card details p::selection {
+                        background-color: var(--highlight);
+                    }
+
+                .card details p {
+                    /*display: list-item;*/
+                    cursor: default;
+                    /*margin-left: 3rem;*/
+                    list-style-type: corona;
+                }
+
+                .card details summary::before {
+                    cursor: pointer;
+                    position: absolute;
+                    display: inline-flex;
+                    width: 1rem;
+                    height: 1rem;
+                    left: 0rem;
+                    margin-right: 0.5rem;
+                    content: url("data:image/svg+xml,%3Csvg width='100%' height='100%' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22.6066 12H1.3934' stroke='%23202842' stroke-width='1.875' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 1.39343V22.6066' stroke='%23202842' stroke-width='1.875' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+                }
+
+                .card details[open] summary {
+                    font-weight: 700;
+                }
+
+                    .card details[open] summary::before {
+                        transform: rotate(45deg);
+                        content: url("data:image/svg+xml,%3Csvg width='100%' height='100%' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22.6066 12H1.3934' stroke='%23202842' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 1.39343V22.6066' stroke='%23202842' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+                    }
+    </style>
+</head>
+<body>
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #c62b3f; ">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="color:white;background-image: url(data:image/png;base64,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);background-repeat: no-repeat;background-size: 50px 42px;padding-left: 51px; background-position-y:center;">SWC Logging</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <!--<ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>-->
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+    <div class="container" style="margin-top:35px;">
+        <main role="main" class="pb-3">
+            <div id="row-detail"></div>
+            <div gui-structure-top-panel="" class="gui-structure-top-panel gui-p-6 gui-border-b gui-border-b-solid">
+                <div gui-search-bar="" class="gui-flex gui-items-center gui-h-full gui-w-3/5 gui-mr-auto gui-search-bar">
+                    <div gui-search-icon="" class="gui-search-icon gui-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10.231" height="10.601" viewBox="0 0 10.231 10.601" class="gui-search-icon-svg">
+                            <line x2="1.77" y2="1.77" transform="translate(7.4 7.77)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></line>
+                            <circle cx="4.02" cy="4.02" r="4.02" transform="translate(0.5 0.5)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none"></circle>
+                        </svg>
+                    </div>
+                    <form id="searchForm" class="card" style="margin-top:0px; margin-bottom:15px;">
+                        <details class="info" style="border-bottom: 7px solid #dee2e6; border-left: 0;">
+                            <summary style="margin-top: 3px;">
+                                <div class="form-group" style="margin-bottom:0px;">
+                                    <label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Logging type</label>
+                                    <select name="LoggingType" id="LoggingType" class="form-control" style="width:141px;">
+                                        <option value="">All</option>
+                                        <option value="Critical">Critical</option>
+                                        <option value="Debug">Debug</option>
+                                        <option value="Error">Error</option>
+                                        <option value="Information">Information</option>
+                                        <option value="Trace">Trace</option>
+                                        <option value="Warning">Warning</option>
+                                    </select>
+                                </div>
+                                <div style="width: 80%; padding-left: 5px; padding-right: 5px;">
+                                    <div class="form-group" style="margin-bottom:0px;">
+                                        <label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Text to search</label>
+                                        <input class=".gui-border-0 gui-w-full gui-h-full gui-py-5 gui-pr-5 gui-pl-21 ng-untouched ng-pristine ng-valid form-control" id="TextToSearch" name="TextToSearch" placeholder="Search logs" type="text" value="" />
+                                    </div>
+                                </div>
+                                <div style="width: 20%; padding-left: 0px; padding-right: 5px;">
+                                    <div class="form-group" style="margin-bottom:0px;">
+                                        <label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Time range</label>
+                                        <select name="TimeRange" id="TimeRange" class="form-control">
+                                            <option value="">All</option>
+                                            <option value="Last_15_minutes">Last 15 minutes</option>
+                                            <option value="Last_30_minutes">Last 30 minutes</option>
+                                            <option value="Last_1_hour">Last 1 hour</option>
+                                            <option value="Last_4_hours">Last 4 hours</option>
+                                            <option value="Last_12_hours">Last 12 hours</option>
+                                            <option value="Last_24_hours">Last 24 hours</option>
+                                            <option value="Last_7_days">Last 7 days</option>
+                                            <option value="Last_30_days">Last 30 days</option>
+                                            <option value="Last_60_days">Last 60 days</option>
+                                            <option value="Last_90_days">Last 90 days</option>
+                                            <option value="Last_6_month">Last 6 months</option>
+                                            <option value="Last_1_year">Last 1 year</option>
+                                            <option value="Last_2_years">Last 2 years</option>
+                                            <option value="Last_5_years">Last 5 years</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="icon-details-preview-rendering text-center">
+                                    <button id="btnGo" class="btn btn-primary" type="button">Go</button>
+                                </div>
+                                <div style="padding-left: 5px; font-size: x-large;">
+                                    +
+                                </div>
+                            </summary>
+                            <p style="padding-bottom: 0px; margin-bottom: 0px; padding-top: 0px; font-size: x-small;">
+                                <i>More refine search optoins to be released in future.</i>
+                            </p>
+                        </details>
+                    </form>
+                </div>
+            </div>
+            <div style="width:50%; float: left;"><h6 align="left" style="margin:0px 7px 0px 4px";>Total Logs: <span class="label label-default totalScoreDocs">0</span></h6></div>
+            <div><h6 align="right" style="margin:0px 7px 0px 4px";>Showing: <span class="label label-default" id="currentShow">0</span> Out of <span class="label label-default totalScoreDocs">0</span></h6></div>
+            <div id="logContainer" class="card" style="margin-top:0px;"></div>
+
+            <script id="logtmpl" type="text/x-jQuery-tmpl">
+                <details class="warning">
+                    <summary style="padding-left:3px;"><span style="padding-right: 6px; font-family: fantasy;">${counter()}</span> ${logTime} : ${message}</summary>
+                    <p style="padding-bottom: 0px; margin-bottom: 0px;"><b>Exception:</b> ${exception}</p>
+                    <p style="padding-bottom: 0px; margin-bottom: 0px;"><b>StackTrace:</b> ${stackTrace}</p>
+                </details>
+            </script>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container" style="margin-top:27px;">
+            <span class="text-muted">&copy; 2022 - SoftWiz Circle</span>
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+    <script>
+        var fullLogList = [];
+        var indexcounter = 1;
+        var start = 1;
+        var end = 50;
+        $(document).ready(function () {
+            $('#btnGo').on('click', GetAllLogs);
+
+            GetAllLogs();
+
+            $(window).scroll(function () {
+                if ($(window).scrollTop() > $(document).height() - $(window).height() - 20) {
+                    start = end + 1;
+                    end = end + 50;
+                    $("#logtmpl").tmpl(getList(fullLogList, start, end)).appendTo("#logContainer");
+                }
+            });
+
+            $('#TextToSearch').on("keypress", function (e) {
+                if (e.keyCode == 13) {
+                    $('#btnGo').click();
+                    return false;
+                }
+            });
+        });
+
+        function GetAllLogs() {
+            $.ajax({
+                type: "Post",
+                dataType: 'json',
+                url: "/SWCL/GetErrorList",
+                data: $("#searchForm").serialize(),
+                success: function (res) {
+                    console.log(res.result);
+                    $('#logContainer').text('');
+                    fullLogList = res.result.swcSearchResults;
+
+                    if (res.result.swcSearchResults.length == 0) {
+                        $("#logContainer").append('<div style="margin-bottom:0px;" class="alert alert-secondary" role="alert"><center><b>No log found.</b> Please refine the search.</center></div>');
+                        $('#currentShow').text(0);
+                        $('.totalScoreDocs').text(0);
+                    }
+                    else {
+                        indexcounter = 1;
+                        $("#logtmpl").tmpl(getList(res.result.swcSearchResults, 1, 50)).appendTo("#logContainer");
+                        $('.totalScoreDocs').text(res.result.totalScoreDocs);
+                    }
+                }
+            });
+        }
+
+        function getList(list, start, end) {
+            if (end <= list.length) {
+                $('#currentShow').text(end);
+            } else {
+                $('#currentShow').text(list.length);
+            }
+            
+            return list.slice(start - 1, end);
+        }
+
+        function counter() {
+            return indexcounter++;
+        }
+    </script>
+</body>
+</html>
