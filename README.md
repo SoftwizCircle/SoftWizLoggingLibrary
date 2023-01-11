@@ -85,6 +85,31 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
         webBuilder.UseStartup<Startup>();
     });
 ```
+# Usage
+This is very easy to use. To use the logging we only need to use the `_logger` object. Here are all the methods for different log level. Every method have different parameters which could be used to add more information in the log.
+```sh
+_logger.LogInformation("This is log information")
+_logger.LogDebug("Home screen Starting up");
+_logger.LogError("This is error log of home screen.");
+_logger.LogTrace("This is trace log");
+_logger.LogCritical(ex,"This is critical log");
+_logger.LogWarning("Just a warning");
+```
+We also have a way to define `scope` of logs. For example, if we want to search logs for specific method/functionality then we may define `scope` and through this we can find all the logs which falls in this scope.
+In below example we can find all logs related to this functionality through the text `"Payment_09843"` as this text is defined in the `scope`. And you will also find this text in each log with key `scope`.
+```sh
+using (_logger.BeginScope("Payment_09843"))
+{
+    _logger.LogInformation("Payment module starts.")
+    _logger.LogWarning("Remarks not found.");
+    _logger.LogCritical("Some error has occurred at step 5");
+    _logger.LogInformation("Payment module end.")
+}
+```
+# Where
+Since this is based on _Apache Lucene_, it creates logs in a folder(swclog) in `bin` folder of your project. If you need to cleanup all the logs, you only need to empty this folder.
+
+
 # Launch
 To launch the search page you only need to access the Index action from SWCLController
 ```sh
