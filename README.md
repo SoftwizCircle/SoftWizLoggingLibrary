@@ -22,7 +22,7 @@ The built in page that this library has returns the whole HTML of the page in st
 
 # Integration
 
-> I. Install SWCLoggging
+> I. Install SWCLogging
 ```sh
 NuGet\Install-Package SWCLogging -Version 1.0.2
 ```
