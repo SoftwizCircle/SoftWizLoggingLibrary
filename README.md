@@ -22,9 +22,9 @@ The built in page that this library has returns the whole HTML of the page in st
 
 # Integration
 
-> I. Install SWCLogggin
+> I. Install SWCLoggging
 ```sh
-nuget
+NuGet\Install-Package SWCLogging -Version 1.0.2
 ```
 > II. - Create a controller called SWCLController
       - Add two namespaces.
@@ -70,6 +70,20 @@ public IActionResult GetLogs(SWCSearchRequest model)
     Layout = null;
 }
 @Html.Raw(ViewBag.Data)
+```
+> V. Add _SWCLogging_ as a logging provider in `Program.cs`
+```sh
+public static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+    .ConfigureLogging(logging =>
+    {
+        logging.ClearProviders();
+        logging.AddSWCLogging();
+    })
+    .ConfigureWebHostDefaults(webBuilder =>
+    {
+        webBuilder.UseStartup<Startup>();
+    });
 ```
 # Launch
 To launch the search page you only need to access the Index action from SWCLController
