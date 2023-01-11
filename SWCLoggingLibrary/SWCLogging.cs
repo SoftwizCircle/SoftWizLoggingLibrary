@@ -122,7 +122,7 @@ namespace SWCLoggingLibrary
                 AddFullTextQuery(rootquery, swcSearchRequest);
 
                 // Time range search query
-                AddTimeRangeQuery(rootquery, swcSearchRequest);
+                AddTimeRangeQuery(rootquery, swcSearchRequest);                
 
                 return GetLatestLog(rootquery, swcSearchRequest.NoOfRcordsToFetch);
             }
@@ -168,9 +168,11 @@ namespace SWCLoggingLibrary
                 //string newterm = string.Empty;
                 //string[] tok = term.Split(new[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries);
                 //tok.ForEach(x => newterm += x.EnsureStartsWith(" *").EnsureEndsWith("* "));
-                string[] k = new string[4] { SWCConstants.Message, SWCConstants.Exception, SWCConstants.StackTrace, SWCConstants.Scope };
+                string[] fields = string.IsNullOrEmpty(swcSearchRequest.Fields)
+                    ? new string[8] { SWCConstants.Message, SWCConstants.Exception, SWCConstants.StackTrace, SWCConstants.Scope, SWCConstants.EventId, SWCConstants.ActionName, SWCConstants.ActionId, SWCConstants.TraceId }
+                    : new string[1] { swcSearchRequest.Fields };
                 var analyzer = new StandardAnalyzer(SWCConstants.AppLuceneVersion);
-                var parser = new MultiFieldQueryParser(SWCConstants.AppLuceneVersion, k, analyzer);
+                var parser = new MultiFieldQueryParser(SWCConstants.AppLuceneVersion, fields, analyzer);
                 parser.DefaultOperator = QueryParser.AND_OPERATOR;
                 parser.AllowLeadingWildcard = true;
 
@@ -222,7 +224,7 @@ namespace SWCLoggingLibrary
 
                     foreach (var item in doc.Fields)
                     {
-                        if (item.Name != SWCConstants.CreationDate)
+                        if (item.Name != SWCConstants.CreationDate && item.Name != "{OriginalFormat}")
                         {
                             fields.Add(item.Name, item?.GetStringValue());
                         }                        
