@@ -55,7 +55,7 @@ namespace SWCLoggingLibrary
                 {SWCConstants.LogTime, DateTimeOffset.UtcNow.ToString(SWCConstants.DateFormat) }
             };
 
-            if (exception!=null)
+            if (exception != null)
             {
                 item.Add(SWCConstants.Exception, exception.Message);
                 item.Add(SWCConstants.StackTrace, exception.StackTrace);
@@ -76,19 +76,19 @@ namespace SWCLoggingLibrary
             if (_swcLoggingProvider.ScopeProvider != null)
             {
                 _swcLoggingProvider.ScopeProvider.ForEachScope((value, loggingProps) =>
+                {
+                    if (value is string)
                     {
-                        if (value is string)
+                        item.Add(SWCConstants.Scope, Convert.ToString(value));
+                    }
+                    else if (value is IEnumerable<KeyValuePair<string, object>> props)
+                    {
+                        foreach (var prop in props)
                         {
-                            item.Add(SWCConstants.Scope, Convert.ToString(value));
+                            item.Add(prop.Key, Convert.ToString(prop.Value));
                         }
-                        else if (value is IEnumerable<KeyValuePair<string, object>> props)
-                        {
-                            foreach (var prop in props)
-                            {
-                                item.Add(prop.Key, Convert.ToString(prop.Value));
-                            }
-                        }
-                    }, state);
+                    }
+                }, state);
             }
 
             Add(item);
@@ -168,9 +168,11 @@ namespace SWCLoggingLibrary
                 //string newterm = string.Empty;
                 //string[] tok = term.Split(new[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries);
                 //tok.ForEach(x => newterm += x.EnsureStartsWith(" *").EnsureEndsWith("* "));
-                string[] k = new string[4] { SWCConstants.Message, SWCConstants.Exception, SWCConstants.StackTrace, SWCConstants.Scope };
+                string[] fields = string.IsNullOrEmpty(swcSearchRequest.Fields)
+                    ? new string[8] { SWCConstants.Message, SWCConstants.Exception, SWCConstants.StackTrace, SWCConstants.Scope, SWCConstants.EventId, SWCConstants.ActionName, SWCConstants.ActionId, SWCConstants.TraceId }
+                    : new string[1] { swcSearchRequest.Fields };
                 var analyzer = new StandardAnalyzer(SWCConstants.AppLuceneVersion);
-                var parser = new MultiFieldQueryParser(SWCConstants.AppLuceneVersion, k, analyzer);
+                var parser = new MultiFieldQueryParser(SWCConstants.AppLuceneVersion, fields, analyzer);
                 parser.DefaultOperator = QueryParser.AND_OPERATOR;
                 parser.AllowLeadingWildcard = true;
 
@@ -222,10 +224,10 @@ namespace SWCLoggingLibrary
 
                     foreach (var item in doc.Fields)
                     {
-                        if (item.Name != SWCConstants.CreationDate)
+                        if (item.Name != SWCConstants.CreationDate && item.Name != "{OriginalFormat}")
                         {
                             fields.Add(item.Name, item?.GetStringValue());
-                        }                        
+                        }
                     }
 
                     response.SWCSearchResults.Add(fields);
@@ -239,7 +241,7 @@ namespace SWCLoggingLibrary
 
         void Add(IDictionary<string, string> values)
         {
-            using(Lucene.Net.Store.Directory directory = FSDirectory.Open(new DirectoryInfo(_swcLoggingProvider.Options.FolderPath)))
+            using (Lucene.Net.Store.Directory directory = FSDirectory.Open(new DirectoryInfo(_swcLoggingProvider.Options.FolderPath)))
             using (IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(SWCConstants.AppLuceneVersion, new StandardAnalyzer(SWCConstants.AppLuceneVersion))))
             {
                 var document = new Document();
