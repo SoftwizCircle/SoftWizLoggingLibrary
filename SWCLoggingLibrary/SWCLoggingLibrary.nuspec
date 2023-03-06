@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>SWCLogging</id>
-    <version>1.0.2</version>
+    <version>1.0.21</version>
     <title>$title$</title>
     <authors>SoftWiz Circle</authors>
     <owners>Manish Kumar</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <icon>log.png</icon>
-    <projectUrl>https://github.com/SoftwizCircle/SoftWizLoggingLibrary</projectUrl>
+    <projectUrl>https://github.com/kmrmanish86/SWCL</projectUrl>
     <description>$description$</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>$copyright$</copyright>

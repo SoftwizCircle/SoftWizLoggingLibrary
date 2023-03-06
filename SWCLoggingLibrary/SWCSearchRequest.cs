@@ -11,7 +11,6 @@ namespace SWCLoggingLibrary
         private int? noOfRcordsToFetch = null;
 
         public string LoggingType { get; set; }
-        public string Fields { get; set; }
         public string TextToSearch { get; set; }
         public string TimeRange { get; set; }
         public int NoOfRcordsToFetch

@@ -23,9 +23,6 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Version>1.0.3</Version>
     <PackageTags>C#, Logging, .Net Core, MVC, Log, Lucene, ElasticSearch, ELMAH</PackageTags>
-    <RepositoryType>Public</RepositoryType>
-    <RepositoryUrl>https://github.com/SoftwizCircle/SoftWizLoggingLibrary</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/SoftwizCircle/SoftWizLoggingLibrary</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
