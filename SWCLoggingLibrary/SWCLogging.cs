@@ -18,13 +18,27 @@ namespace SWCLoggingLibrary
     public class SWCLogging : ILogger
     {
         private readonly SWCLoggingProvider _swcLoggingProvider;
+        private static SWCLogging _swcLoggingInstance = null;
         public string Category { get; private set; }
-        public SWCLogging(SWCLoggingProvider swcLoggingProvider)
+
+        public static SWCLogging GetInstance(SWCLoggingProvider swcLoggingProvider, string category=null)
+        {
+            if (_swcLoggingInstance == null)
+            {
+                _swcLoggingInstance = category == null
+                    ? new SWCLogging(swcLoggingProvider)
+                    : new SWCLogging(swcLoggingProvider, category);
+            }
+
+            return _swcLoggingInstance;
+        }
+
+        private SWCLogging(SWCLoggingProvider swcLoggingProvider)
         {
             _swcLoggingProvider = swcLoggingProvider;
         }
 
-        public SWCLogging(SWCLoggingProvider swcLoggingProvider, string category)
+        private SWCLogging(SWCLoggingProvider swcLoggingProvider, string category)
         {
             _swcLoggingProvider = swcLoggingProvider;
             this.Category = category;

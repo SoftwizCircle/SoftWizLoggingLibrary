@@ -55,7 +55,7 @@ namespace SWCLoggingLibrary
             return swcLogging.GetOrAdd(categoryName,
             (category) =>
             {
-                return new SWCLogging(this, category);
+                return SWCLogging.GetInstance(this, category);
             });
         }
 

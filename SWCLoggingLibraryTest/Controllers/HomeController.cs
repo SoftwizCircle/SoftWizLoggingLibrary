@@ -31,6 +31,12 @@ namespace SWCLoggingLibraryTest.Controllers
             _logger.LogTrace("This is trace log");
 
 
+            using (_logger.BeginScope("C4568"))
+            {
+                _logger.LogCritical("C4568-- Critical Log");
+                _logger.LogWarning("C4568-- Warning Log");
+            }
+
             try
             {
                 int k = 9, u = 0;

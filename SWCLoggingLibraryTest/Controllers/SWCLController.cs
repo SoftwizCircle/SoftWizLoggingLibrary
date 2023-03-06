@@ -21,8 +21,8 @@ namespace SWCLoggingLibraryTest.Controllers
 
         public IActionResult Index()
         {
-            SWCLogging swlog = new SWCLogging((SWCLoggingProvider)_loggerProvider);
-            var k = swlog.GetSearchPage();
+            SWCLogging swclog = SWCLogging.GetInstance((SWCLoggingProvider)_loggerProvider);
+            var k = swclog.GetSearchPage();
             ViewBag.Data = k;
             return View();
         }
@@ -30,9 +30,8 @@ namespace SWCLoggingLibraryTest.Controllers
         [HttpPost]
         public IActionResult GetLogs(SWCSearchRequest model)
         {
-            SWCLogging swlog = new SWCLogging((SWCLoggingProvider)_loggerProvider);
-            //model.NoOfRcordsToFetch = 50;
-            var res = swlog.SearchLogs(model);
+            SWCLogging swclog = SWCLogging.GetInstance((SWCLoggingProvider)_loggerProvider);
+            var res = swclog.SearchLogs(model);
 
             return Json(new { result = res });
         }
