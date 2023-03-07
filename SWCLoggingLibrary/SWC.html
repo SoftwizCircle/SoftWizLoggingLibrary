@@ -210,6 +210,16 @@
         .warninglog {
             border-left-color: rgba(90,165,255,0.75) !important;
         }
+
+        .loader {
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            display: block;
+            top: 50vh;
+            left: 50%;
+        } .loader:before, .loader:after {content: ""; display: block;border: 23px solid transparent;border-top-color: #ffc107;position: absolute;left: 0;top: 0;animation: weld-rotate 2s infinite ease-in;} .loader:before { border-color: transparent transparent transparent #FF3D00;animation-delay: 0.5s; } @keyframes weld-rotate { 0%, 25% {transform: rotate(0deg) } 50%, 75% {transform: rotate(180deg)} 100% {transform: rotate(360deg) } }
+
     </style>
 </head>
 
@@ -254,7 +264,7 @@
                         </tr>
                     </table>
                 </h6>
-            </div><div><h6 align="right" style="margin:0px 7px 0px 4px" ;>Showing: <span class="label label-default" id="currentShow">0</span> Out of <span class="label label-default totalScoreDocs">0</span></h6></div><div id="logContainer" class="card" style="margin-top:0px;"></div>
+            </div><div><h6 align="right" style="margin:0px 7px 0px 4px" ;>Showing: <span class="label label-default" id="currentShow">0</span> Out of <span class="label label-default totalScoreDocs">0</span></h6></div><span class="loader" id='spanloader' ></span><div id="logContainer" class="card" style="margin-top:0px;"></div>
         </main>
     </div><footer class="footer"><div class="container" style="margin-top:27px;"><span class="text-muted">&copy; 2023 - SoftWiz Circle</span></div></footer>
 
@@ -273,10 +283,11 @@
                 }
             }); $('#TextToSearch').on("keypress", function (e) { if (e.keyCode == 13) { $('#btnGo').click(); return false; } });
         }); function GetAllLogs() {
+            $('#spanloader').show();
             $.ajax({
                 type: 'Post', dataType: 'json', url: '/SWCL/GetLogs', data: $("#searchForm").serialize(), success: function (res) {
                     console.log(res.result); $('#logContainer').text(''); fullLogList = res.result.swcSearchResults;
-                    if (res.result.swcSearchResults.length == 0) { $("#logContainer").append('<div style="margin-bottom:0px;" class="alert alert-secondary" role="alert"><center><b>No log found.</b> Please refine the search.</center></div>'); $('#currentShow').text(0); $('.totalScoreDocs').text(0); } else { indexcounter = 1; appendLogsInHTML(res.result.swcSearchResults, 1, 50); $('.totalScoreDocs').text(res.result.totalScoreDocs); }
+                    if (res.result.swcSearchResults.length == 0) { $("#logContainer").append('<div style="margin-bottom:0px;" class="alert alert-secondary" role="alert"><center><b>No log found.</b> Please refine the search.</center></div>'); $('#currentShow').text(0); $('.totalScoreDocs').text(0); $('#spanloader').hide(); } else { indexcounter = 1; appendLogsInHTML(res.result.swcSearchResults, 1, 50); $('.totalScoreDocs').text(res.result.totalScoreDocs); $('#spanloader').hide(); }
                 }
             });
         }
