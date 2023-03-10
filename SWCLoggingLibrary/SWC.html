@@ -154,6 +154,11 @@
                         content: url(data:image/svg+xml,%3Csvg width='100%' height='100%' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22.6066 12H1.3934' stroke='%23202842' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 1.39343V22.6066' stroke='%23202842' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A);
                     }
 
+        .accordianheaderspan {
+            padding-right: 6px;
+            font-family: fantasy;
+        }
+
         .accordianheader {
             text-overflow: ellipsis;
             overflow: hidden;
@@ -212,12 +217,13 @@
         }
 
         .loader {
-            position: absolute;
+            position: fixed;
             width: 48px;
             height: 48px;
             display: block;
-            top: 50vh;
+            top: 50%;
             left: 50%;
+            z-index: 1500;
         }
 
             .loader:before, .loader:after {
@@ -253,6 +259,7 @@
 </head>
 
 <body>
+    <span class="loader" id='spanloader'></span>
     <!-- Fixed navbar --><div class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #c62b3f; ">
         <div class="container">
             <div class="navbar-header">
@@ -264,98 +271,127 @@
         <main role="main" class="pb-3">
             <div id="row-detail"></div>
             <div style='position: sticky; top: 35px; z-index: 1028; background-color: white;'>
-    <div gui-structure-top-panel="" class="gui-structure-top-panel gui-p-6 gui-border-b gui-border-b-solid">
-        <div gui-search-bar="" class="gui-flex gui-items-center gui-h-full gui-w-3/5 gui-mr-auto gui-search-bar">
-            <div gui-search-icon="" class="gui-search-icon gui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="10.231" height="10.601" viewBox="0 0 10.231 10.601" class="gui-search-icon-svg"><line x2="1.77" y2="1.77" transform="translate(7.4 7.77)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></line><circle cx="4.02" cy="4.02" r="4.02" transform="translate(0.5 0.5)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none"></circle></svg></div>
+                <div gui-structure-top-panel="" class="gui-structure-top-panel gui-p-6 gui-border-b gui-border-b-solid">
+                    <div gui-search-bar="" class="gui-flex gui-items-center gui-h-full gui-w-3/5 gui-mr-auto gui-search-bar">
+                        <div gui-search-icon="" class="gui-search-icon gui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="10.231" height="10.601" viewBox="0 0 10.231 10.601" class="gui-search-icon-svg"><line x2="1.77" y2="1.77" transform="translate(7.4 7.77)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></line><circle cx="4.02" cy="4.02" r="4.02" transform="translate(0.5 0.5)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none"></circle></svg></div>
 
-            <form id="searchForm" class="card" style="margin-top:0px; margin-bottom:15px;">
-                <details class="info" style="border-bottom: 7px solid #dee2e6; border-left: 0;">
-                    <summary style="margin-top: 3px;">
-                        <div class="form-group" style="margin-bottom:0px;"><label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Logging type</label><select name="LoggingType" id="LoggingType" class="form-control" style="width:141px;"><option value="">All</option><option value="Critical">Critical</option><option value="Debug">Debug</option><option value="Error">Error</option><option value="Information">Information</option><option value="Trace">Trace</option><option value="Warning">Warning</option></select></div><div class="form-group" style="margin-bottom:0px; margin-left:5px;"><label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Fields</label><select name='Fields' id='Fields' class='form-control' style='width:141px;'><option value=''>All</option><option value='Scope'>Scope</option><option value='Message'>Message</option><option value='Exception'>Exception</option><option value='StackTrace'>StackTrace</option><option value='EventId'>EventId</option><option value='ActionName'>ActionName</option><option value='ActionId'>ActionId</option><option value='TraceId'>TraceId</option></select></div><div style="width: 80%; padding-left: 5px; padding-right: 5px;">
-                            <div class="form-group" style="margin-bottom:0px;">
-                                <label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Text to search</label><input class=".gui-border-0 gui-w-full gui-h-full gui-py-5 gui-pr-5 gui-pl-21 ng-untouched ng-pristine ng-valid form-control" id="TextToSearch" name="TextToSearch" placeholder="Search logs" type="text" value="" />
-                            </div>
-                        </div><div style="width: 20%; padding-left: 0px; padding-right: 5px;"><div class="form-group" style="margin-bottom:0px;"><label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Time range</label><select name="TimeRange" id="TimeRange" class="form-control"><option value="">All</option><option value="Last_15_minutes">Last 15 minutes</option><option value="Last_30_minutes">Last 30 minutes</option><option value="Last_1_hour">Last 1 hour</option><option value="Last_4_hours">Last 4 hours</option><option value="Last_12_hours">Last 12 hours</option><option value="Last_24_hours">Last 24 hours</option><option value="Last_7_days">Last 7 days</option><option value="Last_30_days">Last 30 days</option><option value="Last_60_days">Last 60 days</option><option value="Last_90_days">Last 90 days</option><option value="Last_6_month">Last 6 months</option><option value="Last_1_year">Last 1 year</option><option value="Last_2_years">Last 2 years</option><option value="Last_5_years">Last 5 years</option></select></div></div><div class="icon-details-preview-rendering text-center"><button id="btnGo" class="btn btn-primary" type="button">Go</button></div><div style="padding-left: 5px; font-size: x-large;">+</div>
-                    </summary><p style="padding-bottom: 0px; margin-bottom: 0px; padding-top: 0px; font-size: x-small;"><i>More refine search optoins to be released in future.</i></p>
-                </details>
-            </form>
+                        <form id="searchForm" class="card" style="margin-top:0px; margin-bottom:15px;">
+                            <details class="info" style="border-bottom: 7px solid #dee2e6; border-left: 0;">
+                                <summary style="margin-top: 3px;">
+                                    <div class="form-group" style="margin-bottom:0px;"><label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Logging type</label><select name="LoggingType" id="LoggingType" class="form-control" style="width:141px;"><option value="">All</option><option value="Critical">Critical</option><option value="Debug">Debug</option><option value="Error">Error</option><option value="Information">Information</option><option value="Trace">Trace</option><option value="Warning">Warning</option></select></div><div class="form-group" style="margin-bottom:0px; margin-left:5px;"><label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Fields</label><select name='Fields' id='Fields' class='form-control' style='width:141px;'><option value=''>All</option><option value='Scope'>Scope</option><option value='Message'>Message</option><option value='Exception'>Exception</option><option value='StackTrace'>StackTrace</option><option value='EventId'>EventId</option><option value='ActionName'>ActionName</option><option value='ActionId'>ActionId</option><option value='TraceId'>TraceId</option></select></div><div style="width: 80%; padding-left: 5px; padding-right: 5px;">
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Text to search</label><input class=".gui-border-0 gui-w-full gui-h-full gui-py-5 gui-pr-5 gui-pl-21 ng-untouched ng-pristine ng-valid form-control" id="TextToSearch" name="TextToSearch" placeholder="Search logs" type="text" value="" />
+                                        </div>
+                                    </div><div style="width: 20%; padding-left: 0px; padding-right: 5px;"><div class="form-group" style="margin-bottom:0px;"><label for="demo_overview" style="font-size: smaller; position: absolute; top: -7px; margin-bottom: 0px; font-weight: 100;">Time range</label><select name="TimeRange" id="TimeRange" class="form-control"><option value="">All</option><option value="Last_15_minutes">Last 15 minutes</option><option value="Last_30_minutes">Last 30 minutes</option><option value="Last_1_hour">Last 1 hour</option><option value="Last_4_hours">Last 4 hours</option><option value="Last_12_hours">Last 12 hours</option><option value="Last_24_hours">Last 24 hours</option><option value="Last_7_days">Last 7 days</option><option value="Last_30_days">Last 30 days</option><option value="Last_60_days">Last 60 days</option><option value="Last_90_days">Last 90 days</option><option value="Last_6_month">Last 6 months</option><option value="Last_1_year">Last 1 year</option><option value="Last_2_years">Last 2 years</option><option value="Last_5_years">Last 5 years</option></select></div></div><div class="icon-details-preview-rendering text-center"><button id="btnGo" class="btn btn-primary" type="button">Go</button></div><div style="padding-left: 5px; font-size: x-large;">+</div>
+                                </summary><p style="padding-bottom: 0px; margin-bottom: 0px; padding-top: 0px; font-size: x-small;"><i>More refine search optoins to be released in future.</i></p>
+                            </details>
+                            <input type="hidden" name="PageNumber" id="PageNumber" value="" />
+                        </form>
 
-        </div>
-    </div><div style="width:59%; float: left;">
-        <h6 align="left" style="margin:0px 7px 0px 4px; float:left;">Total Logs: <span class="label label-default totalScoreDocs">0</span></h6>
-        <h6 align="right" style="margin:0px 7px 0px 4px; float:right;">
-            <table class="charts-css column multiple">
-                <tr style="height: 15px; text-align: center; font-size: xx-small; font-weight: 700;">
-                    <td title="Critical" style="width: 35px; background-color: rgba(240,50,50,0.75);">C</td>
-                    <td title="Debug" style="width: 35px; background-color: rgba(255,180,50,0.75);">D</td>
-                    <td title="Error" style="width: 35px; background-color: #ff9800;">E</td>
-                    <td title="Information" style="width: 35px; background-color: rgba(100,210,80,0.75);">I</td>
-                    <td title="Trace" style="width: 35px; background-color: rgba(170,90,240,0.75);">T</td>
-                    <td title="Warning" style="width: 35px; background-color: rgba(90,165,255,0.75);">W</td>
-                </tr>
-            </table>
-        </h6>
-    </div><div><h6 align="right" style="margin:0px 7px 0px 4px" ;>Showing: <span class="label label-default" id="currentShow">0</span> Out of <span class="label label-default totalScoreDocs">0</span></h6></div>
-</div>
-            <span class="loader" id='spanloader'></span><div id="logContainer" class="card" style="margin-top:0px;"></div>
+                    </div>
+                </div><div style="width:59%; float: left;">
+                    <h6 align="left" style="margin:0px 7px 0px 4px; float:left;">Total Logs: <span class="label label-default totalScoreDocs">0</span></h6>
+                    <h6 align="right" style="margin:0px 7px 0px 4px; float:right;">
+                        <table class="charts-css column multiple">
+                            <tr style="height: 15px; text-align: center; font-size: xx-small; font-weight: 700;">
+                                <td title="Critical" style="width: 35px; background-color: rgba(240,50,50,0.75);">C</td>
+                                <td title="Debug" style="width: 35px; background-color: rgba(255,180,50,0.75);">D</td>
+                                <td title="Error" style="width: 35px; background-color: #ff9800;">E</td>
+                                <td title="Information" style="width: 35px; background-color: rgba(100,210,80,0.75);">I</td>
+                                <td title="Trace" style="width: 35px; background-color: rgba(170,90,240,0.75);">T</td>
+                                <td title="Warning" style="width: 35px; background-color: rgba(90,165,255,0.75);">W</td>
+                            </tr>
+                        </table>
+                    </h6>
+                </div><div><h6 align="right" style="margin:0px 7px 0px 4px" ;>Showing: <span class="label label-default" id="currentShow">0</span> Out of <span class="label label-default totalScoreDocs">0</span></h6></div>
+            </div>
+            <div id="logContainer" class="card" style="margin-top:0px;"></div>
         </main>
-    </div><footer class="footer"><div class="container" style="margin-top:27px;"><span class="text-muted">&copy; <script>document.write(new Date().getFullYear())</script> - SoftWiz Circle</span></div></footer>
+    </div><footer class="footer">
+        <div class="container" style="margin-top:27px;">
+            <span class="text-muted">
+                &copy;
+                <script>document.write(new Date().getFullYear())</script> - SoftWiz Circle
+            </span>
+        </div>
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
     <script>
-        var fullLogList = [];
         var indexcounter = 1;
-        var start = 1;
-        var end = 50;
+        var ajaxInprogress = false;
         $(document).ready(function () {
-            $('#btnGo').on('click', GetAllLogs); GetAllLogs(); $(window).scroll(function () {
+            $('#PageNumber').val(1);
+            $('#btnGo').on('click', GetAllLogsFromStart); $('#PageNumber').val(''); GetAllLogs(); $(window).scroll(function () {
                 if ($(window).scrollTop() > $(document).height() - $(window).height() - 20) {
-                    start = end + 1; end = end + 50;
-                    appendLogsInHTML(fullLogList, start, end);
+
+                    if (ajaxInprogress == false) {
+                        $('#PageNumber').val(parseInt($('#PageNumber').val()) + 1);
+                        GetAllLogs();
+                    }
                 }
-            }); $('#TextToSearch').on("keypress", function (e) { if (e.keyCode == 13) { $('#btnGo').click(); return false; } });
-        }); function GetAllLogs() {
+            }); $('#TextToSearch').on('keypress', function (e) { if (e.keyCode == 13) { $('#btnGo').click(); return false; } });
+        });
+
+        function GetAllLogsFromStart() {
+            indexcounter = 1;
+            $('#PageNumber').val('');
+            $('#logContainer').text('');
+            GetAllLogs();
+        }
+
+        function GetAllLogs() {
             $('#spanloader').show();
+            ajaxInprogress = true;
             $.ajax({
-                type: 'Post', dataType: 'json', url: '/SWCL/GetLogs', data: $("#searchForm").serialize(), success: function (res) {
-                    console.log(res.result); $('#logContainer').text(''); fullLogList = res.result.swcSearchResults;
-                    if (res.result.swcSearchResults.length == 0) { $("#logContainer").append('<div style="margin-bottom:0px;" class="alert alert-secondary" role="alert"><center><b>No log found.</b> Please refine the search.</center></div>'); $('#currentShow').text(0); $('.totalScoreDocs').text(0); $('#spanloader').hide(); } else { indexcounter = 1; appendLogsInHTML(res.result.swcSearchResults, 1, 50); $('.totalScoreDocs').text(res.result.totalScoreDocs); $('#spanloader').hide(); }
+                type: 'Post', dataType: 'json', url: '/SWCL/GetLogs', data: $('#searchForm').serialize(), success: function (res) {
+                    if (res.result.swcSearchResults.length == 0 && (res.result.totalScoreDocs == 0 || $('details.warning').length < res.result.totalScoreDocs)) {
+                        if ($('#logContainer #divNoLogFound').length == 0) {
+                            $('#logContainer').text('').append('<div id=divNoLogFound style=margin-bottom:0px; class=\"alert alert-secondary\" role=alert><center><b>No log found.</b> Please refine the search.</center></div>');
+                        }
+                        $('#currentShow').text(0); $('.totalScoreDocs').text(0); $('#spanloader').hide();
+                    } else {
+                        appendLogsInHTML(res.result.swcSearchResults);
+                        $('.totalScoreDocs').text(res.result.totalScoreDocs);
+                        $('#spanloader').hide();
+                    }
+
+                    $('#PageNumber').val(res.result.pageNumber);
+                    $('#currentShow').text(res.result.noOfVisibleRecords);
+                    ajaxInprogress = false;
+                },
+                error: function (error) {
+                    ajaxInprogress = false;
                 }
             });
         }
 
-        function appendLogsInHTML(list, start, end) {
-            $.each(getList(list, start, end), function (i, val) {
+        function appendLogsInHTML(list) {
 
-                var htmltmpl = '<details class=warning ' + val.LogLevel + 'log>';
-                htmltmpl += '<summary class="accordianheader" > <span style="padding-right: 6px; font-family: fantasy;">' + (i + 1) + '</span> ' + val.LogTime + ' : ' + val.Message + '</summary >';
+            if ($('#logContainer #divNoLogFound').length > 0) {
+                $('#logContainer').text('');
+            }
+
+            $.each(list, function (i, val) {
+                var csslogtype = 'warning ' + val.LogLevel + 'log';
+                var htmltmpl = '<details class=\"' + csslogtype + '\">';
+                htmltmpl += '<summary class=accordianheader> <span class=accordianheaderspan>' + (counter()) + '</span> ' + val.LogTime + ' : ' + val.Message + '</summary >';
 
                 let entries = Object.entries(val)
                 entries.map(([key, val], j = entry) => {
-                    var cssclass = j % 2 === 0 ? "evendetailsrow" : "odddetailsrow";
-                    htmltmpl += '<p class="' + cssclass + '" ><span class="detailsrowspan">' + key + '</span><span> ' + val + ' </span></p>';
+                    var cssclass = j % 2 === 0 ? 'evendetailsrow' : 'odddetailsrow';
+                    htmltmpl += '<p class=\"' + cssclass + '\" ><span class=detailsrowspan>' + key + '</span><span> ' + val + ' </span></p>';
                 });
 
                 htmltmpl += '</details>';
-                $("#logContainer").append(htmltmpl);
+                $('#logContainer').append(htmltmpl);
             });
-        }
-
-        function getList(list, start, end) {
-            if (end <= list.length) {
-                $('#currentShow').text(end);
-            } else {
-                $('#currentShow').text(list.length);
-            }
-
-            return list.slice(start - 1, end);
         }
 
         function counter() {
             return indexcounter++;
         }
     </script>
-
 </body>
 </html>

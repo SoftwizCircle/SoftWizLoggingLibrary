@@ -115,6 +115,7 @@ namespace SWCLoggingLibrary
         /// <returns>Complete HTML page</returns>
         public string GetSearchPage()
         {
+            //return File.ReadAllText("SWC.html");
             return SWCConstants.SearchPageHTML;
         }
 
@@ -138,7 +139,7 @@ namespace SWCLoggingLibrary
                 // Time range search query
                 AddTimeRangeQuery(rootquery, swcSearchRequest);
 
-                return GetLatestLog(rootquery, swcSearchRequest.NoOfRcordsToFetch);
+                return GetLatestLog(rootquery, swcSearchRequest);
             }
             catch { }
 
@@ -216,9 +217,9 @@ namespace SWCLoggingLibrary
             rootquery.Add(logLevelQuery, Occur.MUST);
         }
 
-        private SWCSearchResponse GetLatestLog(Query query, int limit)
+        private SWCSearchResponse GetLatestLog(Query query, SWCSearchRequest swcSearchRequest)
         {
-            SWCSearchResponse response = new SWCSearchResponse();
+            SWCSearchResponse swcSearchresponse = new SWCSearchResponse();
             int totalScoreDocs = 0;
             using (Lucene.Net.Store.Directory directory = FSDirectory.Open(new DirectoryInfo(_swcLoggingProvider.Options.FolderPath)))
             using (DirectoryReader reader = DirectoryReader.Open(directory))
@@ -226,11 +227,15 @@ namespace SWCLoggingLibrary
                 var searcher = new IndexSearcher(reader);
 
                 var sort = new Sort(new SortField(SWCConstants.CreationDate, SortFieldType.INT64, true));
-                var hits = searcher.Search(query, null, limit, sort);
-                totalScoreDocs = hits.ScoreDocs.Count();
 
-                Console.WriteLine(hits.TotalHits + " result(s) found for query: " + query.ToString());
-                foreach (var scoreDoc in hits.ScoreDocs)
+                int RecordsToSkip = (swcSearchRequest.PageNumber - 1) * swcSearchRequest.NoOfRcordsToFetch;
+                int RecordsToFetch = swcSearchRequest.PageNumber * swcSearchRequest.NoOfRcordsToFetch;
+
+                TopDocs topDocs = searcher.Search(query, null, RecordsToFetch, sort);
+                ScoreDoc[] scoreDocs = topDocs.ScoreDocs.Skip(RecordsToSkip).Take(swcSearchRequest.NoOfRcordsToFetch).ToArray();
+                totalScoreDocs = searcher.Search(query, null, Int32.MaxValue, sort).ScoreDocs.Count();
+
+                foreach (var scoreDoc in scoreDocs)
                 {
                     var doc = searcher.Doc(scoreDoc.Doc);
 
@@ -244,13 +249,25 @@ namespace SWCLoggingLibrary
                         }
                     }
 
-                    response.SWCSearchResults.Add(fields);
+                    swcSearchresponse.SWCSearchResults.Add(fields);
+                }
+
+                if (scoreDocs.Length > 0)
+                {
+                    swcSearchresponse.PageNumber = swcSearchRequest.PageNumber;
+
+                    swcSearchresponse.NoOfVisibleRecords = scoreDocs.Length < RecordsToFetch ? swcSearchRequest.NoOfRcordsToFetch * (swcSearchRequest.PageNumber - 1) + scoreDocs.Length : swcSearchRequest.NoOfRcordsToFetch;
+                }
+                else
+                {
+                    swcSearchresponse.PageNumber = swcSearchRequest.PageNumber - 1;
+                    swcSearchresponse.PageNumber = swcSearchresponse.PageNumber == 0 ? 1 : swcSearchresponse.PageNumber;
+                    swcSearchresponse.NoOfVisibleRecords = totalScoreDocs;
                 }
             }
 
-            response.TotalScoreDocs = totalScoreDocs;
-
-            return response;
+            swcSearchresponse.TotalScoreDocs = totalScoreDocs;
+            return swcSearchresponse;
         }
 
         void Add(IDictionary<string, string> values)

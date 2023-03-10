@@ -16,5 +16,7 @@ namespace SWCLoggingLibrary
         public List<Dictionary<string, string>> SWCSearchResults { get; set; }
 
         public int TotalScoreDocs { get; set; }
+        public int PageNumber { get; set; }
+        public int NoOfVisibleRecords { get; set; }
     }
 }
