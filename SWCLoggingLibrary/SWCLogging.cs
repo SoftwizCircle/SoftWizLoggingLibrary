@@ -155,22 +155,22 @@ namespace SWCLoggingLibrary
 
                 if (swcSearchRequest.TimeRange.Contains("minute"))
                 {
-                    min = currentDateTime.AddMinutes(((int)Enum.Parse(typeof(TimeRange), swcSearchRequest.TimeRange) * -1)).AsYMDHMS();
+                    min = currentDateTime.AddMinutes(((int)Enum.Parse(typeof(TimeRange), swcSearchRequest.TimeRange) * -1)).Ticks;
                 }
                 else if (swcSearchRequest.TimeRange.Contains("hour"))
                 {
-                    min = currentDateTime.AddHours(((int)Enum.Parse(typeof(TimeRange), swcSearchRequest.TimeRange) * -1)).AsYMDHMS();
+                    min = currentDateTime.AddHours(((int)Enum.Parse(typeof(TimeRange), swcSearchRequest.TimeRange) * -1)).Ticks;
                 }
                 else if (swcSearchRequest.TimeRange.Contains("day"))
                 {
-                    min = currentDateTime.AddDays(((int)Enum.Parse(typeof(TimeRange), swcSearchRequest.TimeRange) * -1)).AsYMDHMS();
+                    min = currentDateTime.AddDays(((int)Enum.Parse(typeof(TimeRange), swcSearchRequest.TimeRange) * -1)).Ticks;
                 }
                 else if (swcSearchRequest.TimeRange.Contains("month"))
                 {
-                    min = currentDateTime.AddMonths(((int)Enum.Parse(typeof(TimeRange), swcSearchRequest.TimeRange) * -1)).AsYMDHMS();
+                    min = currentDateTime.AddMonths(((int)Enum.Parse(typeof(TimeRange), swcSearchRequest.TimeRange) * -1)).Ticks;
                 }
 
-                NumericRangeQuery<long> numericRangeQuery = NumericRangeQuery.NewInt64Range(SWCConstants.CreationDate, min, currentDateTime.AsYMDHMS(), true, true);
+                NumericRangeQuery<long> numericRangeQuery = NumericRangeQuery.NewInt64Range(SWCConstants.CreationDate, min, currentDateTime.Ticks, true, true);
 
                 rootquery.Add(numericRangeQuery, Occur.MUST);
             }
@@ -180,9 +180,6 @@ namespace SWCLoggingLibrary
         {
             if (!string.IsNullOrEmpty(swcSearchRequest.TextToSearch))
             {
-                //string newterm = string.Empty;
-                //string[] tok = term.Split(new[] { ' ', '/' }, StringSplitOptions.RemoveEmptyEntries);
-                //tok.ForEach(x => newterm += x.EnsureStartsWith(" *").EnsureEndsWith("* "));
                 string[] fields = string.IsNullOrEmpty(swcSearchRequest.Fields)
                     ? new string[8] { SWCConstants.Message, SWCConstants.Exception, SWCConstants.StackTrace, SWCConstants.Scope, SWCConstants.EventId, SWCConstants.ActionName, SWCConstants.ActionId, SWCConstants.TraceId }
                     : new string[1] { swcSearchRequest.Fields };
@@ -284,8 +281,8 @@ namespace SWCLoggingLibrary
                         Field.Store.YES));
                 }
 
-                document.Add(new Int64Field(SWCConstants.CreationDate, DateTime.UtcNow.AsYMDHMS(), Field.Store.YES));
-
+                document.Add(new Int64Field(SWCConstants.CreationDate, DateTime.UtcNow.Ticks, Field.Store.YES));
+                
                 writer.AddDocument(document);
                 writer.Flush(true, false);
                 writer.Commit();
