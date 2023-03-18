@@ -348,6 +348,7 @@
         }
 
         function GetAllLogs() {
+            var searchedText = $('#TextToSearch').val().trim().replace(/(^"|"$)/g, '');
             $('#spanloader').show();
             ajaxInprogress = true;
             $.ajax({
@@ -358,7 +359,7 @@
                         }
                         $('#currentShow').text(0); $('.totalScoreDocs').text(0); $('#spanloader').hide();
                     } else {
-                        appendLogsInHTML(res.result.swcSearchResults);
+                        appendLogsInHTML(res.result.swcSearchResults, searchedText);
                         $('.totalScoreDocs').text(res.result.totalScoreDocs);
                         $('#spanloader').hide();
                     }
@@ -373,7 +374,7 @@
             });
         }
 
-        function appendLogsInHTML(list) {
+        function appendLogsInHTML(list, searchedText) {
 
             if ($('#logContainer #divNoLogFound').length > 0) {
                 $('#logContainer').text('');
@@ -382,12 +383,12 @@
             $.each(list, function (i, val) {
                 var csslogtype = 'warning ' + val.LogLevel + 'log';
                 var htmltmpl = '<details class=\"' + csslogtype + '\">';
-                htmltmpl += '<summary class=accordianheader> <span class=accordianheaderspan>' + (counter()) + '</span> ' + val.LogTime + ' : ' + highlightSearchedText(val.Message) + '</summary >';
+                htmltmpl += '<summary class=accordianheader> <span class=accordianheaderspan>' + (counter()) + '</span> ' + val.LogTime + ' : ' + highlightSearchedText(val.Message, searchedText) + '</summary >';
 
                 let entries = Object.entries(val)
                 entries.map(([key, val], j = entry) => {
                     var cssclass = j % 2 === 0 ? 'evendetailsrow' : 'odddetailsrow';
-                    htmltmpl += '<p class=\"' + cssclass + '\" ><span class=detailsrowspan>' + key + '</span><span> ' + highlightSearchedText(val) + ' </span></p>';
+                    htmltmpl += '<p class=\"' + cssclass + '\" ><span class=detailsrowspan>' + key + '</span><span> ' + highlightSearchedText(val, searchedText) + ' </span></p>';
                 });
 
                 htmltmpl += '</details>';
@@ -399,9 +400,7 @@
             return indexcounter++;
         }
 
-        function highlightSearchedText(text) {
-            var searchedText = $('#TextToSearch').val().trim();
-
+        function highlightSearchedText(text, searchedText) {
             if (searchedText == '') {
                 return text;
             }
