@@ -255,6 +255,12 @@
                 transform: rotate(360deg)
             }
         }
+
+        .highlight {
+            background-image: linear-gradient(to right, #f2712136, #e940573d, #8a238726);
+            border-radius: 6px;
+            padding: 3px 0px;
+        }
     </style>
 </head>
 
@@ -376,12 +382,12 @@
             $.each(list, function (i, val) {
                 var csslogtype = 'warning ' + val.LogLevel + 'log';
                 var htmltmpl = '<details class=\"' + csslogtype + '\">';
-                htmltmpl += '<summary class=accordianheader> <span class=accordianheaderspan>' + (counter()) + '</span> ' + val.LogTime + ' : ' + val.Message + '</summary >';
+                htmltmpl += '<summary class=accordianheader> <span class=accordianheaderspan>' + (counter()) + '</span> ' + val.LogTime + ' : ' + highlightSearchedText(val.Message) + '</summary >';
 
                 let entries = Object.entries(val)
                 entries.map(([key, val], j = entry) => {
                     var cssclass = j % 2 === 0 ? 'evendetailsrow' : 'odddetailsrow';
-                    htmltmpl += '<p class=\"' + cssclass + '\" ><span class=detailsrowspan>' + key + '</span><span> ' + val + ' </span></p>';
+                    htmltmpl += '<p class=\"' + cssclass + '\" ><span class=detailsrowspan>' + key + '</span><span> ' + highlightSearchedText(val) + ' </span></p>';
                 });
 
                 htmltmpl += '</details>';
@@ -391,6 +397,17 @@
 
         function counter() {
             return indexcounter++;
+        }
+
+        function highlightSearchedText(text) {
+            var searchedText = $('#TextToSearch').val().trim();
+
+            if (searchedText == '') {
+                return text;
+            }
+            else {
+                return text.replace(new RegExp(searchedText, "gi"), '<span class="highlight">' + searchedText + '</span>');
+            }
         }
     </script>
 </body>
