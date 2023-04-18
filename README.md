@@ -16,9 +16,10 @@ The built in page that this library has returns the whole HTML of the page in st
 
 # Screenshots
 
-![log information](https://user-images.githubusercontent.com/73790753/211767436-7db231f6-22c3-48b4-adf3-f234886d3f4d.JPG)
+![image](https://user-images.githubusercontent.com/73790753/232869994-5b96ffb0-3b14-4791-90e9-e1c43efd2bd4.png)
 
-![file not found exception](https://user-images.githubusercontent.com/73790753/211767453-264da7f7-0a42-41ba-b2fe-0c38ddcdaf13.JPG)
+![scope search](https://user-images.githubusercontent.com/73790753/232870058-ce8db14b-dc72-4ea2-b708-28d41cdf6f44.png)
+
 
 # Integration
 
