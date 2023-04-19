@@ -16,16 +16,15 @@ The built in page that this library has returns the whole HTML of the page in st
 
 # Screenshots
 
-![image](https://user-images.githubusercontent.com/73790753/232869994-5b96ffb0-3b14-4791-90e9-e1c43efd2bd4.png)
+![log information](https://user-images.githubusercontent.com/73790753/232869994-5b96ffb0-3b14-4791-90e9-e1c43efd2bd4.png)
 
-![scope search](https://user-images.githubusercontent.com/73790753/232870058-ce8db14b-dc72-4ea2-b708-28d41cdf6f44.png)
-
+![file not found exception](https://user-images.githubusercontent.com/73790753/232870058-ce8db14b-dc72-4ea2-b708-28d41cdf6f44.png)
 
 # Integration
 
 > I. Install SWCLogging
 ```sh
-NuGet\Install-Package SWCLogging -Version 1.0.2
+NuGet\Install-Package SWCLogging -Version 1.0.3
 ```
 > II. - Create a controller called SWCLController
       - Add two namespaces.
@@ -50,7 +49,7 @@ public class SWCLController : Controller
 ```sh
 public IActionResult Index()
 {
-    SWCLogging swcl = new SWCLogging((SWCLoggingProvider)_loggerProvider);
+    SWCLogging swclog = SWCLogging.GetInstance((SWCLoggingProvider)_loggerProvider);
     ViewBag.Data = swcl.GetSearchPage();
     return View();
 }
@@ -58,7 +57,7 @@ public IActionResult Index()
 [HttpPost]
 public IActionResult GetLogs(SWCSearchRequest model)
 {
-    SWCLogging swclog = new SWCLogging((SWCLoggingProvider)_loggerProvider);
+    SWCLogging swclog = SWCLogging.GetInstance((SWCLoggingProvider)_loggerProvider);
     var res = swclog.SearchLogs(model);
     return Json(new { result = res });
 }
