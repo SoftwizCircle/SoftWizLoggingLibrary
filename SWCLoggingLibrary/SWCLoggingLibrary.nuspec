@@ -2,25 +2,32 @@
 <package >
   <metadata>
     <id>SWCLogging</id>
-    <version>1.0.21</version>
+    <version>1.0.4</version>
     <title>$title$</title>
     <authors>SoftWiz Circle</authors>
     <owners>Manish Kumar</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <icon>log.png</icon>
-    <projectUrl>https://github.com/kmrmanish86/SWCL</projectUrl>
-    <description>$description$</description>
-    <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
+    <projectUrl>https://github.com/SoftwizCircle/SoftWizLoggingLibrary</projectUrl>
+    <description>SWC Logging is a logging library which helps us not only in logging but also provides us an in built user interface to search and analyze the log. This is very easy to integrate.</description>
+    <releaseNotes>
+      - Ability to share search criteria so that same view could be executed on another machine
+      - Constructing url for every log so that it could be easily shareable
+      - Current version information is available on mouse over of copyright information
+      - Corrected project url
+    </releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>C#, Logging, .Net Core, MVC, Log, Lucene, ElasticSearch, ELMAH</tags>
     <dependencies>
-      <dependency id="Lucene.Net" version="4.8.0-beta00016" />
-      <dependency id="Lucene.Net.Analysis.Common" version="4.8.0-beta00016" />
-      <dependency id="Lucene.Net.QueryParser" version="4.8.0-beta00016" />
-      <dependency id="Microsoft.Extensions.Logging" version="7.0.0"/>
-      <dependency id="Microsoft.Extensions.Logging.Abstractions" version="7.0.0"/>
-      <dependency id="Microsoft.Extensions.Logging.Configuration" version="7.0.0"/>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="Lucene.Net" version="4.8.0-beta00016" />
+        <dependency id="Lucene.Net.Analysis.Common" version="4.8.0-beta00016" />
+        <dependency id="Lucene.Net.QueryParser" version="4.8.0-beta00016" />
+        <dependency id="Microsoft.Extensions.Logging" version="7.0.0"/>
+        <dependency id="Microsoft.Extensions.Logging.Abstractions" version="7.0.0"/>
+        <dependency id="Microsoft.Extensions.Logging.Configuration" version="7.0.0"/>
+      </group>
     </dependencies>
   </metadata>
   <files>
