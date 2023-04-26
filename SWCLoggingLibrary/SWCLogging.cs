@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace SWCLoggingLibrary
 {
@@ -130,20 +131,59 @@ namespace SWCLoggingLibrary
             {
                 BooleanQuery rootquery = new BooleanQuery();
 
-                // LogLevel search query
-                AddLogLevelQuery(rootquery, swcSearchRequest);
+                // Process query string
+                ProcessQueryString(swcSearchRequest);
 
-                // Full text search query
-                AddFullTextQuery(rootquery, swcSearchRequest);
+                if (!swcSearchRequest.DocId.HasValue)
+                {
+                    // LogLevel search query
+                    AddLogLevelQuery(rootquery, swcSearchRequest);
 
-                // Time range search query
-                AddTimeRangeQuery(rootquery, swcSearchRequest);
+                    // Full text search query
+                    AddFullTextQuery(rootquery, swcSearchRequest);
+
+                    // Time range search query
+                    AddTimeRangeQuery(rootquery, swcSearchRequest);
+                }
 
                 return GetLatestLog(rootquery, swcSearchRequest);
             }
             catch { }
 
             return new SWCSearchResponse();
+        }
+
+        private void ProcessQueryString(SWCSearchRequest swcSearchRequest)
+        {
+            if (!string.IsNullOrEmpty(swcSearchRequest.QueryStringVariables))
+            {
+                foreach (var vars in swcSearchRequest.QueryStringVariables.Split(","))
+                {
+                    var keyvalue = vars.Split("=");
+                    var keypart = keyvalue[0].ToLower();
+                    var valuepart = HttpUtility.UrlDecode(keyvalue[1]);
+                    switch (keypart)
+                    {
+                        case "id":
+                            swcSearchRequest.DocId = Convert.ToInt32(valuepart);
+                            break;
+                        case "loggingtype":
+                            swcSearchRequest.LoggingType = valuepart;
+                            break;
+                        case "fields":
+                            swcSearchRequest.Fields = valuepart;
+                            break;
+                        case "timerange":
+                            swcSearchRequest.TimeRange = valuepart;
+                            break;
+                        case "texttosearch":
+                            swcSearchRequest.TextToSearch = valuepart;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
         }
 
         private void AddTimeRangeQuery(BooleanQuery rootquery, SWCSearchRequest swcSearchRequest)
@@ -223,48 +263,63 @@ namespace SWCLoggingLibrary
             {
                 var searcher = new IndexSearcher(reader);
 
-                var sort = new Sort(new SortField(SWCConstants.CreationDate, SortFieldType.INT64, true));
-
-                int RecordsToSkip = (swcSearchRequest.PageNumber - 1) * swcSearchRequest.NoOfRcordsToFetch;
-                int RecordsToFetch = swcSearchRequest.PageNumber * swcSearchRequest.NoOfRcordsToFetch;
-
-                TopDocs topDocs = searcher.Search(query, null, RecordsToFetch, sort);
-                ScoreDoc[] scoreDocs = topDocs.ScoreDocs.Skip(RecordsToSkip).Take(swcSearchRequest.NoOfRcordsToFetch).ToArray();
-                totalScoreDocs = searcher.Search(query, null, Int32.MaxValue, sort).ScoreDocs.Count();
-
-                foreach (var scoreDoc in scoreDocs)
+                if (!swcSearchRequest.DocId.HasValue)
                 {
-                    var doc = searcher.Doc(scoreDoc.Doc);
+                    var sort = new Sort(new SortField(SWCConstants.CreationDate, SortFieldType.INT64, true));
 
-                    var fields = new Dictionary<string, string>();
+                    int RecordsToSkip = (swcSearchRequest.PageNumber - 1) * swcSearchRequest.NoOfRcordsToFetch;
+                    int RecordsToFetch = swcSearchRequest.PageNumber * swcSearchRequest.NoOfRcordsToFetch;
 
-                    foreach (var item in doc.Fields)
+                    TopDocs topDocs = searcher.Search(query, null, RecordsToFetch, sort);
+                    ScoreDoc[] scoreDocs = topDocs.ScoreDocs.Skip(RecordsToSkip).Take(swcSearchRequest.NoOfRcordsToFetch).ToArray();
+                    totalScoreDocs = searcher.Search(query, null, Int32.MaxValue, sort).ScoreDocs.Count();
+
+                    foreach (var scoreDoc in scoreDocs)
                     {
-                        if (item.Name != SWCConstants.CreationDate && item.Name != "{OriginalFormat}")
-                        {
-                            fields.Add(item.Name, item?.GetStringValue());
-                        }
+                        FillAllFields(swcSearchresponse, searcher, scoreDoc.Doc);
                     }
 
-                    swcSearchresponse.SWCSearchResults.Add(fields);
-                }
+                    if (scoreDocs.Length > 0)
+                    {
+                        swcSearchresponse.PageNumber = swcSearchRequest.PageNumber;
 
-                if (scoreDocs.Length > 0)
-                {
-                    swcSearchresponse.PageNumber = swcSearchRequest.PageNumber;
-
-                    swcSearchresponse.NoOfVisibleRecords = scoreDocs.Length < RecordsToFetch ? swcSearchRequest.NoOfRcordsToFetch * (swcSearchRequest.PageNumber - 1) + scoreDocs.Length : swcSearchRequest.NoOfRcordsToFetch;
+                        swcSearchresponse.NoOfVisibleRecords = scoreDocs.Length < RecordsToFetch ? swcSearchRequest.NoOfRcordsToFetch * (swcSearchRequest.PageNumber - 1) + scoreDocs.Length : swcSearchRequest.NoOfRcordsToFetch;
+                    }
+                    else
+                    {
+                        swcSearchresponse.PageNumber = swcSearchRequest.PageNumber - 1;
+                        swcSearchresponse.PageNumber = swcSearchresponse.PageNumber == 0 ? 1 : swcSearchresponse.PageNumber;
+                        swcSearchresponse.NoOfVisibleRecords = totalScoreDocs;
+                    }
                 }
                 else
                 {
-                    swcSearchresponse.PageNumber = swcSearchRequest.PageNumber - 1;
-                    swcSearchresponse.PageNumber = swcSearchresponse.PageNumber == 0 ? 1 : swcSearchresponse.PageNumber;
-                    swcSearchresponse.NoOfVisibleRecords = totalScoreDocs;
+                    FillAllFields(swcSearchresponse, searcher, swcSearchRequest.DocId.Value);
+                    swcSearchresponse.PageNumber = 1;
+                    swcSearchresponse.NoOfVisibleRecords = 1;
+                    totalScoreDocs = 1;
                 }
             }
 
             swcSearchresponse.TotalScoreDocs = totalScoreDocs;
             return swcSearchresponse;
+        }
+
+        private void FillAllFields(SWCSearchResponse swcSearchresponse, IndexSearcher searcher, int docId)
+        {            
+            var fields = new Dictionary<string, string>();
+            var doc = searcher.Doc(docId);
+
+            foreach (var item in doc.Fields)
+            {
+                if (item.Name != SWCConstants.CreationDate && item.Name != "{OriginalFormat}")
+                {
+                    fields.Add(item.Name, item?.GetStringValue());
+                }
+            }
+
+            fields.Add(SWCConstants.DocId, Convert.ToString(docId));
+            swcSearchresponse.SWCSearchResults.Add(fields);
         }
 
         void Add(IDictionary<string, string> values)

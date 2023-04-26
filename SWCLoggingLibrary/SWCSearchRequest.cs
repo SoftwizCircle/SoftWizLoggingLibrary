@@ -15,6 +15,7 @@ namespace SWCLoggingLibrary
         public string Fields { get; set; }
         public string TextToSearch { get; set; }
         public string TimeRange { get; set; }
+        public string QueryStringVariables { get; set; }
         public int PageNumber {
             get
             {
@@ -36,5 +37,6 @@ namespace SWCLoggingLibrary
                 noOfRcordsToFetch = value;
             }
         }
+        public int? DocId { get; set; }
     }
 }
