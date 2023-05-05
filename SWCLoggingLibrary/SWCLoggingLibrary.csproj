@@ -23,12 +23,11 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Version>1.0.4</Version>
     <PackageTags>C#, Logging, .Net Core, MVC, Log, Lucene, ElasticSearch, ELMAH</PackageTags>
-    <PackageReleaseNotes>- Enabled search operation with specific and precise field search
-- Performance improvement: Implemented singelton pattern to have only one instance of logger in its lifetime.
-- UI improvement: fixed search bar, search text highlighter, coloured marking for log types.
-- Introduced loading css animation when ajax call takes time.
-- Introduced server side paging.
-- Replaced datetime concatination integer with ticks for sorting.</PackageReleaseNotes>
+    <PackageReleaseNotes>- Ability to share search criteria so that same view could be executed on another machine
+      - Constructing url for every log so that it could be easily shareable
+      - Current version information is available on mouse over of copyright information
+      - Corrected project url
+      - Ability to execute search on click of legends</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/SoftwizCircle/SoftWizLoggingLibrary</PackageProjectUrl>
   </PropertyGroup>
 

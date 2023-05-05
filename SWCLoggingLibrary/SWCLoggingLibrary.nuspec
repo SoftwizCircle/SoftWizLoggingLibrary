@@ -16,6 +16,7 @@
       - Constructing url for every log so that it could be easily shareable
       - Current version information is available on mouse over of copyright information
       - Corrected project url
+      - Ability to execute search on click of legends
     </releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>C#, Logging, .Net Core, MVC, Log, Lucene, ElasticSearch, ELMAH</tags>

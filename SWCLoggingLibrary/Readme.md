@@ -16,15 +16,15 @@ The built in page that this library has returns the whole HTML of the page in st
 
 # Screenshots
 
-![log information](https://user-images.githubusercontent.com/73790753/232869994-5b96ffb0-3b14-4791-90e9-e1c43efd2bd4.png)
+![Log](https://user-images.githubusercontent.com/73790753/236464681-823f4aac-ce3e-46b2-bc5f-43267a21761a.JPG)
 
-![file not found exception](https://user-images.githubusercontent.com/73790753/232870058-ce8db14b-dc72-4ea2-b708-28d41cdf6f44.png)
+![log search](https://user-images.githubusercontent.com/73790753/236464708-a4697249-98cf-4cf0-899d-029fd55c8b7e.JPG)
 
 # Integration
 
 > I. Install SWCLogging
 ```sh
-NuGet\Install-Package SWCLogging -Version 1.0.3
+NuGet\Install-Package SWCLogging -Version 1.0.4
 ```
 > II. - Create a controller called SWCLController
       - Add two namespaces.
