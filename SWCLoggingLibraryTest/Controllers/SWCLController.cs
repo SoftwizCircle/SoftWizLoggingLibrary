@@ -22,8 +22,7 @@ namespace SWCLoggingLibraryTest.Controllers
         public IActionResult Index()
         {
             SWCLogging swclog = SWCLogging.GetInstance((SWCLoggingProvider)_loggerProvider);
-            var k = swclog.GetSearchPage();
-            ViewBag.Data = k;
+            ViewBag.Data = swclog.GetSearchPage();
             return View();
         }
 

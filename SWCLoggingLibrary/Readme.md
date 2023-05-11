@@ -1,7 +1,7 @@
 # Why?
 The idea of building this library coined when I was going through features of .Net core and we got to know about ILogger interface. I got to know about the mechanism that there is a way to write my own logging provider and !voila.
 
-I am always facinated about the speed of the _Elasticsearch_ which is used for log analytics, full-text search, security intelligence, business analytics, and operational intelligence use cases. This is based on Apache Lucene.
+I am always fascinated about the speed of the _Elasticsearch_ which is used for log analytics, full-text search, security intelligence, business analytics, and operational intelligence use cases. This is based on Apache Lucene.
 There is another logging library present called _ELMAH_ which used to be free but now it is subscription based library.
 
 I have tried to build _SWCLogging_ which is also based on _Apache Lucene_ which provides you a way to log and search capability in its built in search page.
@@ -19,6 +19,20 @@ The built in page that this library has returns the whole HTML of the page in st
 ![Log](https://user-images.githubusercontent.com/73790753/236464681-823f4aac-ce3e-46b2-bc5f-43267a21761a.JPG)
 
 ![log search](https://user-images.githubusercontent.com/73790753/236464708-a4697249-98cf-4cf0-899d-029fd55c8b7e.JPG)
+# Logging Verbosity
+It takes care of logging verbosity also mentioned in the appsettings.json file. Here the "Default" cateogry is "Information" it denotes minimum label to log for the category.
+"Microsoft" cateogry is "Critical" it denotes minimum label to log for the category.
+```sh
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Critical",
+      "Microsoft.Hosting.Lifetime": "Critical"
+    }
+  }
+}
+```
 
 # Integration
 
